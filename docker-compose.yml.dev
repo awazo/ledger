@@ -1,0 +1,41 @@
+services:
+
+  db:
+    image: postgres:17
+    container_name: db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        [ -e /var/lib/postgresql/data/.gitkeep ] && rm /var/lib/postgresql/data/.gitkeep
+        docker-entrypoint.sh postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      retries: 3
+
+  app:
+    image: rust:1.83-slim
+    container_name: app
+    volumes:
+      - ./app:/ledger
+    working_dir: /ledger
+    ports:
+      - 2480:2480
+    tty: true
+    command:
+#      - /bin/bash
+#      - -c
+#      - |
+#        cargo test && cargo run
+    depends_on:
+      db:
+        condition: service_healthy
+

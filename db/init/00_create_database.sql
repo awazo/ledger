@@ -1,0 +1,4 @@
+CREATE DATABASE ledger WITH ENCODING = 'UTF8';
+
+ALTER DATABASE ledger OWNER TO postgres;
+

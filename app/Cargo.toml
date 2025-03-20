@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "ledger_app",
+    "ledger_db",
+]
+resolver = "2"
+
+[workspace.dependencies]
+thiserror = "2.0.12"
+tokio = { version = "1.42.0", features = [ "full" ] }
+chrono = { version = "0.4.39", features = [ "serde" ] }
+rust_decimal = "1.36.0"
+
