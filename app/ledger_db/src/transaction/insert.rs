@@ -1,3 +1,5 @@
+use rust_decimal::Decimal;
+
 use crate::{
     Db,
     Error,
@@ -42,6 +44,14 @@ impl Transaction {
                 Err(err) => return Err(err),
             };
 
+            let debit = match Decimal::from_f32_retain(d.debit_amount) {
+                Some(a) => a,
+                None => return Err(Error::DecimalConvError(d.debit_amount)),
+            };
+            let credit = match Decimal::from_f32_retain(d.credit_amount) {
+                Some(a) => a,
+                None => return Err(Error::DecimalConvError(d.credit_amount)),
+            };
             sqlx::query(
                 r#"
                 INSERT INTO transaction_details
@@ -51,8 +61,8 @@ impl Transaction {
             )
             .bind(transaction_id)
             .bind(acc.account_id)
-            .bind(d.debit_amount)
-            .bind(d.credit_amount)
+            .bind(debit)
+            .bind(credit)
             .execute(&mut *tx)
             .await?;
         }

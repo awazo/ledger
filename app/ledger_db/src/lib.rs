@@ -21,6 +21,8 @@ pub enum Error {
     AccountNotFound,
     #[error("illegal datetime")]
     DateTimeError,
+    #[error("decimal conversion failed '{0}'")]
+    DecimalConvError(f32),
 }
 
 impl From<sqlx::Error> for Error {
