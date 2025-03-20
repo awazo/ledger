@@ -55,7 +55,11 @@ impl AccountAmount {
         td: &TransactionDetail,
     ) -> (Self, AmountSide) {
         let (amount, side)
-            = if td.debit_amount >= td.credit_amount {
+            = if td.credit_amount == 0_f32 {
+                (td.debit_amount, AmountSide::Debit)
+            } else if td.debit_amount == 0_f32 {
+                (td.credit_amount, AmountSide::Credit)
+            } else if td.debit_amount >= td.credit_amount {
                 (td.debit_amount - td.credit_amount, AmountSide::Debit)
             } else {
                 (td.credit_amount - td.debit_amount, AmountSide::Credit)
