@@ -32,7 +32,7 @@ CREATE TABLE public.transaction_details (
     debit_amount DECIMAL(18, 2) DEFAULT 0,
     credit_amount DECIMAL(18, 2) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CHECK (debit_amount >= 0 AND credit_amount >= 0),
+    -- CHECK (debit_amount >= 0 AND credit_amount >= 0),
     CHECK (debit_amount = 0 OR credit_amount = 0)  -- Either debit or credit, not both
 );
 
